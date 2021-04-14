@@ -1,0 +1,3 @@
+Welcome
+
+This is the home of Pillow, the friendly PIL fork. PIL is the Python Imaging Library. If you have ever worried or wondered about the future of PIL, please stop. We're here to save the day.
