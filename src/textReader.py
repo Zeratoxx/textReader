@@ -1,5 +1,4 @@
-import io
-from helpers import read_file
+from helpers import read_text
 
 
 class TextReader:
@@ -8,45 +7,67 @@ class TextReader:
         self.line = -1
         self.pos_in_line = -1
 
-    def has_next_line(self):
-        return self.current_line_is_valid() & self.line + 1
+    # ------ big checkers ------
+    def is_a_valid_line(self, line):
+        return 0 <= line < self.input_text_lines.__len__()
 
-    def is_a_valid_line(self, number_to_check):
-        return number_to_check >= 0 & number_to_check <= self.input_text_lines.__len__() - 1
+    def is_a_valid_line_and_a_valid_pos_in_line(self, line, pos_in_line):
+        if self.is_a_valid_line(line):
+            return 0 <= pos_in_line < self.input_text_lines[line].__len__()
+        else:
+            return False
 
-    def current_line_is_valid(self):
+    # ------ checkers ------
+    def cur_line_is_valid(self):
         return self.is_a_valid_line(self.line)
 
-    def pos_is_negative(self):
+    def cur_pos_and_cur_line_are_valid(self):
+        return self.is_a_valid_line_and_a_valid_pos_in_line(self.line, self.pos_in_line)
+
+    def has_next_line(self):
+        return self.is_a_valid_line(self.line + 1)
+
+    def has_previous_line(self):
+        return self.is_a_valid_line(self.line - 1)
+
+    def cur_line_is_negative(self):
         return self.line < 0
 
+    def cur_line_is_too_far(self):
+        return self.input_text_lines.__len__() <= self.line
+
     def get_next_line(self):
-        self.line += 1
-        if self.current_line_is_valid():
+        if self.cur_line_is_valid() and self.has_next_line():
+            self.line += 1
             return self.input_text_lines[self.line]
-        elif self.pos_is_negative():
-            self.line = -1
-            return self.get_next_line()
+        elif self.cur_line_is_negative():
+            self.line = 0
+            return self.input_text_lines[self.line]
         else:
             # here is EOF
             return None
 
     def peek_next_line(self):
-        if self.current_line_is_valid():
+        if self.cur_line_is_valid() and self.has_next_line():
             return self.input_text_lines[self.line + 1]
         else:
             # here is EOF
             return None
 
     def get_previous_line(self):
-        if self.current_line_is_valid():
+        if self.cur_line_is_valid() and self.has_previous_line():
             self.line -= 1
-            if self.pos_is_negative():
-                return None
             return self.input_text_lines[self.line]
-        elif self.pos_is_too_negative():
-            self.line = -1
-            return self.get_next_line()
+        elif self.cur_line_is_too_far():
+            self.line = self.input_text_lines.__len__() - 1
+            return self.input_text_lines[self.line]
         else:
-            # here is EOF
+            # here is BOF (begin of file)
+            return None
+
+    def peek_previous_line(self):
+        if self.cur_line_is_valid() and self.has_previous_line():
+            return self.input_text_lines[self.line - 1]
+        else:
+            # here is BOF (begin of file)
             return None
