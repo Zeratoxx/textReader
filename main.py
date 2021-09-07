@@ -1,6 +1,10 @@
+from textReader import TextReader
+
 
 def main():
-    print(f'Hi, PyCharm')
+    reader = TextReader("inputText.txt")
+    while reader.has_next_line():
+        print(reader.get_next_line(), end="")
 
 
 if __name__ == '__main__':
