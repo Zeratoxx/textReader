@@ -36,6 +36,27 @@ class TextReader:
     def cur_line_is_too_far(self):
         return self.input_text_lines.__len__() <= self.line
 
+    def get_number_of_cur_pos(self):
+        if self.cur_pos_and_cur_line_are_valid():
+            return self.pos_in_line
+        else:
+            # here is EOF or BOF
+            return None
+
+    def get_number_of_cur_line(self):
+        if self.cur_line_is_valid():
+            return self.line
+        else:
+            # here is EOF or BOF
+            return None
+
+    def get_cur_line(self):
+        if self.cur_line_is_valid():
+            return self.input_text_lines[self.line]
+        else:
+            # here is EOF or BOF
+            return None
+
     def get_next_line(self):
         if self.cur_line_is_valid() and self.has_next_line():
             self.line += 1
